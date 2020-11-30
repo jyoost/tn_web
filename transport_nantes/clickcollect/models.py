@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import django.utils.timezone
 import uuid
+from authentication.models import Profile
 
 # Create your models here.
 
@@ -25,7 +26,7 @@ class ClickAndCollect(models.Model):
     lockdown reflective vest campaign.
 
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     collectable = models.ForeignKey(ClickableCollectable,
                                     on_delete=models.CASCADE)
     reserve_datetime = models.DateTimeField(default=django.utils.timezone.now)

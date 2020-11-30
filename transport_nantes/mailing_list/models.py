@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import django.utils.timezone
 import uuid
+from authentication.models import Profile
 
 # Create your models here.
 
@@ -41,7 +42,7 @@ class MailingListEvent(models.Model):
         UNSUBCRIBE = 'unsub', 'désinscription'
         BOUNCE = 'bounce', 'bounce'
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     mailing_list = models.ForeignKey(MailingList,
                                      on_delete=models.CASCADE)
     event_timestamp = models.DateTimeField(default=django.utils.timezone.now)

@@ -8,3 +8,6 @@ SITE_ID = 1
 # runserver) will use.  In production, this is specified to gunicorn
 # on the commandline.
 WSGI_APPLICATION = 'transport_nantes.wsgi_tn.application'
+
+# Add constant variable for authentication model
+AUTH_USER_MODEL = "authentication.Profile"
