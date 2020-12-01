@@ -191,3 +191,6 @@ if 'STATIC_ROOT' in dir(settings_local):
 CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
 CAPTCHA_LENGTH = 5
+
+# Add constant variable for authentication model
+AUTH_USER_MODEL = "authentication.Profile"
