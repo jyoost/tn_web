@@ -1,6 +1,6 @@
 """Module to create authentication models."""
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, User
 
 
 class MyAccountManager(BaseUserManager):
@@ -32,12 +32,24 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+# count=0
+# total = User.objects.count()
+# def gen_db():
+#     global count
+
+#     user = User.objects.get(pk=count)
+#     if count < total:
+#         count +=1
+#         return [user.email, user.username, user.password, user.is_admin, user.is_active, user.is_staff, user.is_superuser]
+#     else:
+#         return [None, None, None, False, False, False, False]
 
 class Profile(AbstractUser):
     """User model in database."""
 
-    email = models.EmailField(verbose_name="email", max_length=255, unique=True)
-    username = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(verbose_name="email", max_length=150, unique=True, default=User.email)
+    username = models.CharField(max_length=50, unique=True, default=User.username)
+    password = models.CharField(max_length=128, default=User.password)
     # date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
     # last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
     is_admin = models.BooleanField(default=False)
@@ -49,7 +61,7 @@ class Profile(AbstractUser):
     email_confirmed = models.BooleanField(default=False)
     # Most user informations
     commune = models.CharField(max_length=100, blank=True)
-    code_postal = models.CharField(max_length=10, blank=True)
+    code_postal = models.CharField(max_length=5, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
