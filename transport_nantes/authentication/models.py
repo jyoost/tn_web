@@ -1,6 +1,6 @@
 """Module to create authentication models."""
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager, User
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class MyAccountManager(BaseUserManager):
@@ -44,12 +44,12 @@ class MyAccountManager(BaseUserManager):
 #     else:
 #         return [None, None, None, False, False, False, False]
 
-class Profile(AbstractUser):
+class Profile(AbstractBaseUser):
     """User model in database."""
 
-    email = models.EmailField(verbose_name="email", max_length=150, unique=True, default=User.email)
-    username = models.CharField(max_length=50, unique=True, default=User.username)
-    password = models.CharField(max_length=128, default=User.password)
+    email = models.EmailField(verbose_name="email", max_length=150, unique=True)
+    username = models.CharField(max_length=50, unique=True)
+    password = models.CharField(max_length=128)
     # date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
     # last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
     is_admin = models.BooleanField(default=False)
