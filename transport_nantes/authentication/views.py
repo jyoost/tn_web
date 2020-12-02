@@ -1,12 +1,12 @@
-# from asso_tn.utils import make_timed_token, token_valid
+from asso_tn.utils import make_timed_token, token_valid
 
 # from django.contrib import auth
 # from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.models import User
-# from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 # from django.http import HttpResponseServerError
-# from django.template.loader import render_to_string
+from django.template.loader import render_to_string
 # from django.urls import reverse
 # from django.utils.encoding import force_bytes, force_text
 # from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -17,6 +17,8 @@ from django.shortcuts import render, redirect
 
 from authentication.forms import RegistrationForm, AuthenticationForm # SignUpForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import login, authenticate, logout
+from django.core.mail import send_mail
+from .models import Profile
 
 """
 A quick note on the captcha:
@@ -45,11 +47,13 @@ def registration_view(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             account = form.save()
-
+            
             # Create account and login
             #TODO See to send registration confirm mail instead 
-            login(request, account)
-            return redirect("index")
+            # login(request, account)
+            # return redirect("index")
+            send_activation(request, account, True)
+            return redirect('authentication:account_activation_sent', is_new=True)
         else:
             context["registration_form"] = form
     else:
@@ -123,50 +127,53 @@ def login_view(request):
 #         form = SignUpForm()
 #     return render(request, 'authentication/login.html', {'form': form})
 
-# def send_activation(request, user):
-#     """Send user an activation/login link.
+def send_activation(request, user, is_new):
+    """Send user an activation/login link.
 
-#     The caller should then redirect to / render a template letting the
-#     user know the mail is on its way, since the redirect is a GET.
+    The caller should then redirect to / render a template letting the
+    user know the mail is on its way, since the redirect is a GET.
 
-#     """
-#     current_site = get_current_site(request)
-#     subject = 'Votre compte à {dom}'.format(dom=current_site.domain)
-#     message = render_to_string('authentication/account_activation_email.html', {
-#         'user_id': user.pk,
-#         'domain': current_site.domain,
-#         'token': make_timed_token(user.pk, 20),
-#     })
-#     if hasattr(settings, 'ROLE') and settings.ROLE in ['staging', 'production']:
-#         user.email_user(subject, message)
-#     else:
-#         # We're in dev.
-#         print("Mode dev : mél qui aurait été envoyé :")
-#         print(message)
+    """
+    current_site = get_current_site(request)
+    subject = 'Votre compte à {dom}'.format(dom=current_site.domain)
+    message = render_to_string('authentication/account_activation_email.html', {
+        'user_id': user.pk,
+        'domain': current_site.domain,
+        'token': make_timed_token(user.pk, 20),
+        "is_new": is_new,
+    })
+    recipient_list = [str(user.email)]
+    send_mail(subject, "", None, recipient_list, fail_silently=False, html_message=message)
+    # if hasattr(settings, 'ROLE') and settings.ROLE in ['staging', 'production']:
+    #     user.email_user(subject, message)
+    # else:
+    #     # We're in dev.
+    #     print("Mode dev : mél qui aurait été envoyé :")
+    #     print(message)
 
-# def account_activation_sent(request, is_new):
-#     is_new_bool = (is_new == True)
-#     return render(request, 'authentication/account_activation_sent.html', {'is_new': is_new_bool})
+def account_activation_sent(request, is_new):
+    is_new_bool = (is_new == True)
+    return render(request, 'authentication/account_activation_sent.html', {'is_new': is_new_bool})
 
-# def activate(request, token):
-#     """Process an activation token.
+def activate(request, token):
+    """Process an activation token.
 
-#     The result should be (1) to flag the user as having a valid email
-#     address and (2) to login the user.
+    The result should be (1) to flag the user as having a valid email
+    address and (2) to login the user.
 
-#     """
-#     user_id = token_valid(token)
-#     if user_id < 0:
-#         return render(request, 'account_activation_invalid.html')
-#     try:
-#         user = User.objects.get(pk=user_id)
-#         user.is_active = True
-#         user.profile.email_confirmed = True
-#         user.save()
-#         auth.login(request, user)
-#         return redirect('index')
-#     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-#         return render(request, 'authentication/account_activation_invalid.html')
+    """
+    user_id = token_valid(token)
+    if user_id < 0:
+        return render(request, 'account_activation_invalid.html')
+    try:
+        user = Profile.objects.get(pk=user_id)
+        user.is_active = True
+        user.email_confirmed = True
+        user.save()
+        login(request, user)
+        return redirect('index')
+    except (TypeError, ValueError, OverflowError, Profile.DoesNotExist):
+        return render(request, 'authentication/account_activation_invalid.html')
 
 # class DeauthView(LogoutView):
 #     """Log out the user.
