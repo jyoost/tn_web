@@ -79,6 +79,11 @@ def login_view(request):
             password = request.POST["password"]
             user = authenticate(email=email, password=password)
 
+            if not user.email_confirmed:
+                send_activation(request, user, True)
+                # return redirect("authentication:email_not_confirmed")
+                return render(request, "authentication/email_not_confirmed.html")
+
             if user:
                 login(request, user)
                 return redirect("index")
@@ -87,6 +92,7 @@ def login_view(request):
     
     context["login_form"] = form
     return render(request, "authentication/login.html", context)
+
 
 # def login(request):
 #     if request.method == 'POST':

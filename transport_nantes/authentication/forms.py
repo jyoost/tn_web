@@ -32,6 +32,7 @@ class AuthenticationForm(forms.ModelForm):
             if not authenticate(email=email, password=password):
                 raise forms.ValidationError("Email ou mot de passe invalide")
 
+
 # class SignUpForm(UserCreationForm):
 #     email = forms.EmailField(
 #         max_length=254,
