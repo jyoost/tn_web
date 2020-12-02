@@ -34,6 +34,7 @@ urlpatterns = [
     #      name='account_activation_sent'),
     # path('activate/<token>', views.activate, name='activate'),
 
-    path("register/", views.registration_view, name="register")
+    path("register/", views.registration_view, name="register"),
+    path("logout/", views.logout_view, name="logout"),
 
 ]

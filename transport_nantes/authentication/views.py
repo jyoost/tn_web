@@ -16,7 +16,7 @@ from django.shortcuts import render, redirect
 # from django.conf import settings
 
 from authentication.forms import RegistrationForm # SignUpForm, UserUpdateForm, ProfileUpdateForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 
 """
 A quick note on the captcha:
@@ -56,6 +56,11 @@ def registration_view(request):
         form = RegistrationForm()
         context["registration_form"] = form
     return render(request, "authentication/register.html", context)
+
+def logout_view(request):
+    logout(request)
+    return redirect("index")
+
 
 # def login(request):
 #     if request.method == 'POST':
