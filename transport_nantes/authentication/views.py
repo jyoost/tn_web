@@ -152,7 +152,7 @@ def send_activation(request, user, is_new):
     #     print(message)
 
 def account_activation_sent(request, is_new):
-    is_new_bool = (is_new == True)
+    is_new_bool = is_new
     return render(request, 'authentication/account_activation_sent.html', {'is_new': is_new_bool})
 
 def activate(request, token):
@@ -164,7 +164,7 @@ def activate(request, token):
     """
     user_id = token_valid(token)
     if user_id < 0:
-        return render(request, 'account_activation_invalid.html')
+        return render(request, 'authentication/account_activation_invalid.html')
     try:
         user = Profile.objects.get(pk=user_id)
         user.is_active = True
