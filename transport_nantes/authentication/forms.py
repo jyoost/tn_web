@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from captcha.fields import CaptchaField
 from .models import Profile
+from django.contrib.auth import authenticate
 
 
 class RegistrationForm(UserCreationForm):
@@ -15,6 +16,21 @@ class RegistrationForm(UserCreationForm):
         model = Profile
         fields = ("email", "username", "password1", "password2", "captcha")
 
+
+class AuthenticationForm(forms.ModelForm):
+    email = forms.EmailField(label="Adresse email")
+    password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
+
+    class Meta:
+        model = Profile
+        fields = ("email", "password")
+
+    def clean(self):
+        if self.is_valid():
+            email = self.cleaned_data["email"]
+            password = self.cleaned_data["password"]
+            if not authenticate(email=email, password=password):
+                raise forms.ValidationError("Email ou mot de passe invalide")
 
 # class SignUpForm(UserCreationForm):
 #     email = forms.EmailField(

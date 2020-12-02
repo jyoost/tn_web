@@ -15,7 +15,7 @@ from django.shortcuts import render, redirect
 # from django.contrib.auth.views import LoginView, LogoutView
 # from django.conf import settings
 
-from authentication.forms import RegistrationForm # SignUpForm, UserUpdateForm, ProfileUpdateForm
+from authentication.forms import RegistrationForm, AuthenticationForm # SignUpForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import login, authenticate, logout
 
 """
@@ -61,6 +61,28 @@ def logout_view(request):
     logout(request)
     return redirect("index")
 
+def login_view(request):
+    context = {}
+
+    user = request.user
+    if user.is_authenticated:
+        return redirect("index")
+
+    if request.POST:
+        form = AuthenticationForm(request.POST)
+        if form.is_valid():
+            email = request.POST["email"]
+            password = request.POST["password"]
+            user = authenticate(email=email, password=password)
+
+            if user:
+                login(request, user)
+                return redirect("index")
+    else:
+        form = AuthenticationForm()
+    
+    context["login_form"] = form
+    return render(request, "authentication/login.html", context)
 
 # def login(request):
 #     if request.method == 'POST':
