@@ -53,7 +53,8 @@ def registration_view(request):
             # login(request, account)
             # return redirect("index")
             send_activation(request, account, True)
-            return redirect('authentication:account_activation_sent', is_new=True)
+            return render(request, 'authentication/account_activation_sent.html', {'is_new': True})
+            # return redirect('authentication:account_activation_sent', is_new=True)
         else:
             context["registration_form"] = form
     else:
@@ -91,13 +92,13 @@ def login_view(request):
             elif request.POST["mail_authentication"]:
                 user = Profile.objects.get(email=form.cleaned_data['email'])
 
-                print("\n"*2, user, "\n"*2)
                 if not user.email_confirmed:
                     send_activation(request, user, True)
                     return render(request, "authentication/email_not_confirmed.html")
                 
                 send_activation(request, user, False)
-                return redirect('authentication:account_activation_sent', is_new=False)
+                return render(request, 'authentication/account_activation_sent.html', {'is_new': False})
+                # return redirect('authentication:account_activation_sent', is_new=False)
 
                 
     else:
@@ -170,9 +171,9 @@ def send_activation(request, user, is_new):
     #     print("Mode dev : mél qui aurait été envoyé :")
     #     print(message)
 
-def account_activation_sent(request, is_new):
-    # is_new_bool = is_new
-    return render(request, 'authentication/account_activation_sent.html', {'is_new': is_new})
+# def account_activation_sent(request, is_new):
+#     is_new_bool = is_new
+#     return render(request, 'authentication/account_activation_sent.html', {'is_new': is_new_bool})
 
 def activate(request, token):
     """Process an activation token.
