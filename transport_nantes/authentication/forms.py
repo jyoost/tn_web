@@ -19,18 +19,24 @@ class RegistrationForm(UserCreationForm):
 
 class AuthenticationForm(forms.ModelForm):
     email = forms.EmailField(label="Adresse email")
-    password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
+    password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe", required= False)
+    mail_authentication = forms.BooleanField(required=False, label="Identification sans mot de passe", initial=False)
 
     class Meta:
         model = Profile
-        fields = ("email", "password")
+        fields = ("email", "password", "mail_authentication")
 
     def clean(self):
         if self.is_valid():
             email = self.cleaned_data["email"]
-            password = self.cleaned_data["password"]
-            if not authenticate(email=email, password=password):
-                raise forms.ValidationError("Email ou mot de passe invalide")
+            if self.cleaned_data["password"]:
+                password = self.cleaned_data["password"]
+                if not authenticate(email=email, password=password):
+                    raise forms.ValidationError("Email ou mot de passe invalide")
+            elif self.cleaned_data["mail_authentication"]:
+                pass
+            else:
+                raise forms.ValidationError("Veuillez soit entrer un mot de passe, soit cocher la case \"Identification sans mot de passe\"")
 
 
 # class SignUpForm(UserCreationForm):

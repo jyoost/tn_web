@@ -77,16 +77,29 @@ def login_view(request):
         if form.is_valid():
             email = request.POST["email"]
             password = request.POST["password"]
-            user = authenticate(email=email, password=password)
 
-            if not user.email_confirmed:
-                send_activation(request, user, True)
-                # return redirect("authentication:email_not_confirmed")
-                return render(request, "authentication/email_not_confirmed.html")
+            if password:
+                user = authenticate(email=email, password=password)
 
-            if user:
-                login(request, user)
-                return redirect("index")
+                if not user.email_confirmed:
+                    send_activation(request, user, True)
+                    return render(request, "authentication/email_not_confirmed.html")
+
+                if user:
+                    login(request, user)
+                    return redirect("index")
+            elif request.POST["mail_authentication"]:
+                user = Profile.objects.get(email=form.cleaned_data['email'])
+
+                print("\n"*2, user, "\n"*2)
+                if not user.email_confirmed:
+                    send_activation(request, user, True)
+                    return render(request, "authentication/email_not_confirmed.html")
+                
+                send_activation(request, user, False)
+                return redirect('authentication:account_activation_sent', is_new=False)
+
+                
     else:
         form = AuthenticationForm()
     
@@ -158,8 +171,8 @@ def send_activation(request, user, is_new):
     #     print(message)
 
 def account_activation_sent(request, is_new):
-    is_new_bool = is_new
-    return render(request, 'authentication/account_activation_sent.html', {'is_new': is_new_bool})
+    # is_new_bool = is_new
+    return render(request, 'authentication/account_activation_sent.html', {'is_new': is_new})
 
 def activate(request, token):
     """Process an activation token.
