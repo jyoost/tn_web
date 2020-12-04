@@ -21,6 +21,7 @@ class AuthenticationForm(forms.ModelForm):
     email = forms.EmailField(label="Adresse email")
     password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe", required= False)
     mail_authentication = forms.BooleanField(required=False, label="Identification sans mot de passe", initial=False)
+    remember_me = forms.BooleanField(required=False, label="Se souvenir de moi", initial=False)
 
     class Meta:
         model = Profile

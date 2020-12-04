@@ -88,6 +88,8 @@ def login_view(request):
 
                 if user:
                     login(request, user)
+                    if not form.cleaned_data['remember_me']:
+                        request.session.set_expiry(0)
                     return redirect("index")
             elif request.POST["mail_authentication"]:
                 user = Profile.objects.get(email=form.cleaned_data['email'])
@@ -95,6 +97,9 @@ def login_view(request):
                 if not user.email_confirmed:
                     send_activation(request, user, True)
                     return render(request, "authentication/email_not_confirmed.html")
+                
+                if not form.cleaned_data['remember_me']:
+                        request.session.set_expiry(0)
                 
                 send_activation(request, user, False)
                 return render(request, 'authentication/account_activation_sent.html', {'is_new': False})

@@ -194,3 +194,6 @@ CAPTCHA_LENGTH = 5
 
 # Add constant variable for authentication model
 AUTH_USER_MODEL = "authentication.Profile"
+
+# Set cookie session duration
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
