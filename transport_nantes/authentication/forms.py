@@ -39,6 +39,33 @@ class AuthenticationForm(forms.ModelForm):
                 raise forms.ValidationError("Veuillez soit entrer un mot de passe, soit cocher la case \"Identification sans mot de passe\"")
 
 
+class ProfileForm(forms.ModelForm):
+    
+    username = forms.CharField(label="Nom d'utilisateur")
+
+    class Meta:
+        model = Profile
+        fields = ("email", "username",)
+
+    def clean_email(self):
+        if self.is_valid():
+            email = self.cleaned_data["email"]
+            try:
+                account = Profile.objects.exclude(pk= self.instance.pk).get(email=email)
+            except Profile.DoesNotExist:
+                return email
+            raise forms.ValidationError("L\'email '%s' est déjà utilisé. \nVeuillez l\'orthographe ou que vous n\'avez pas un compte associé à cette adresse" % account.email)
+
+    def clean_username(self):
+        if self.is_valid():
+            username = self.cleaned_data["username"]
+            try:
+                account = Profile.objects.exclude(pk= self.instance.pk).get(username=username)
+            except Profile.DoesNotExist:
+                return username
+            raise forms.ValidationError("Le nom '%s' est déjà utilisé." % account.username)
+
+
 # class SignUpForm(UserCreationForm):
 #     email = forms.EmailField(
 #         max_length=254,

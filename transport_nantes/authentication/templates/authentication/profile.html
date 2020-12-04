@@ -2,21 +2,38 @@
 {% load static %}
 
 {% block app_content %}
-<div container>
-    <div class="row">
-	<div class="col-lg-12">
-	    <h1>Modifier profile</h1>
 
-	    <form method="POST" enctype="multipart/form-data">
-		{% csrf_token %}
-		<fieldset class="form-group">
-		    <legend class="border-bottom mb-4">Profile Info</legend>
-		    {{ u_form.as_p }}
-		    {{ p_form.as_p }}
-		</fieldset>
-		<button type="submit">Update</button>
-	    </form>
-	</div>
-    </div>
-</div>
+<h2>Compte</h2>
+<form method="post">
+{% csrf_token %}
+
+    {% for field in profile_form %}
+        <p>
+            {{ field.label}}
+            {{ field }}
+
+            {% if field.help_text%}
+                <small style="color:grey;">{{field.help_text}}</small>
+            {% endif %}
+
+            
+        </p>
+    {% endfor %}
+
+    {% for field in profile_form %}
+		{% for error in field.errors %}
+            {% if error != "This field cannot be null." %}
+    			<p style="color: red;">{{error}}</p>
+            {% endif %}
+		{% endfor %}
+	{% endfor %}
+	
+	{% if profile_form.non_field_errors %}
+		<div style="color:red;">
+			<p>{{profile_form.non_field_errors}}</p>
+		</div>
+	{% endif %}
+    <button type="submit" class="btn btn-outline-primary">Mettre à jour</button>
+</form>
+
 {% endblock %}

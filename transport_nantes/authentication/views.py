@@ -15,7 +15,7 @@ from django.template.loader import render_to_string
 # from django.contrib.auth.views import LoginView, LogoutView
 # from django.conf import settings
 
-from authentication.forms import RegistrationForm, AuthenticationForm # SignUpForm, UserUpdateForm, ProfileUpdateForm
+from authentication.forms import RegistrationForm, AuthenticationForm, ProfileForm # SignUpForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import login, authenticate, logout
 from django.core.mail import send_mail
 from .models import Profile
@@ -194,6 +194,25 @@ def activate(request, token):
         return redirect('index')
     except (TypeError, ValueError, OverflowError, Profile.DoesNotExist):
         return render(request, 'authentication/account_activation_invalid.html')
+
+def profile_view(request):
+
+    context = {}
+
+    if not request.user.is_authenticated:
+        return redirect("authenticate:login")
+
+    if request.POST:
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ProfileForm(
+            initial = { "email": request.user.email,
+            "username": request.user.username}
+        )
+    context["profile_form"] = form
+    return render(request, "authentication/profile.html", context)
 
 # class DeauthView(LogoutView):
 #     """Log out the user.

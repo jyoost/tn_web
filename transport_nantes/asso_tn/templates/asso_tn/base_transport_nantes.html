@@ -144,6 +144,9 @@
 		<li class="nav-item">
 			<a class="nav-link" href="{% url 'authentication:logout' %}">Se déconnecter</a>
 		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'authentication:account' %}">Compte</a>
+		</li>
 		{% else %}
 		<li class="nav-item">
 			<a class="nav-link" href="{% url 'authentication:login' %}">Se connecter</a>
