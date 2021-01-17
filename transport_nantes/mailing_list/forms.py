@@ -61,3 +61,19 @@ class QuickMailingListSignupForm(ModelForm):
         labels = {
             'email': "Adresse mél",
         }
+
+class QuickPetitionSignupForm(ModelForm):
+    captcha = CaptchaField(
+        label="Je suis humain",
+        help_text="* disponibilité réservée aux humains",
+        error_messages=dict(invalid="captcha incorrect, veuillez réessayer"))
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'captcha')
+
+        labels = {
+            'first_name': "Prénom",
+            'last_name': "Nom",
+            'email': "Adresse mél",
+        }

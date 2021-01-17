@@ -1,0 +1,105 @@
+{% extends 'asso_tn/base_mobilitain.html' %}
+{% load static %}
+{% load don %}
+{% load mpanels %}
+
+{% block og_title %}Inscrivez-vous à la newsletter de Transport Nantes !{% endblock og_title %}
+{% block og_description %}Recevez chaque mois ou chaque trimestre des nouvelles essentielles de la mobilité en région nantaise.{% endblock og_description %}
+{% block og_image_url %}{% static 'asso_tn/images-quentin-boulegon/gilets-1.jpgasso_tn/images-libres/black-and-white-bridge-children-194009-1000.jpg' %}{% endblock og_image_url %}
+{% block og_image_alt %}Les actualités de la mobilité{% endblock og_image_alt %}
+{% block og_image_type %}image/jpg{% endblock og_image_type %}
+{% block og_image_width %}1000{% endblock og_image_width %}
+{% block og_image_height %}667{% endblock og_image_height %}
+{% block twitter_image %}{% static 'asso_tn/images-libres/black-and-white-bridge-children-194009-1000.jpg' %}{% endblock twitter_image %}
+{% block twitter_title %}Inscrivez-vous à la newsletter de Transport Nantes !{% endblock twitter_title %}
+{% block twitter_description %}Recevez chaque mois ou chaque trimestre des nouvelles essentielles de la mobilité en région nantaise.{% endblock twitter_description %}
+
+{% block app_content %}
+
+<div class="container pt-5">
+    <div class="row">
+	<div class="col-lg-10 col-md-9 col-sm-8">
+	    <h2>A l’attention de la nouvelle Présidente de la Région
+	    des Pays de la Loire.</h2>
+
+	    <p>L’association des Mobilitains demande une réelle
+	    évolution de la mobilité dans les communes et entre les
+	    communes de notre région&nbsp;: sécurité, fluidité, respect de
+		l’environnement.</p>
+
+	    <p>Nous sommes convaincus que le changement de
+		comportements naîtra d’actions systémiques intégrant :
+		cyclistes, piétons, usages de transport collectif car
+		et rail, et automobilistes.
+		{% comment %}
+		le vélo, les piétons, les transports en commun, les lignes
+		ferroviaires et les voitures.
+		{% endcomment %}
+	    </p> 
+
+	    <p>Nous voulons que les piétons et les cyclistes se
+	    sentent plus en sécurité, que les voyageurs ne perdent
+	    plus de temps à attendre trop longtemps leur bus/car, que
+	    la complémentarité piéton, vélo, et transport collectif soit plus
+	    évidente, que plus de lignes ferroviaires soient
+	    disponibles dans différentes gares d’une commune, que les
+	    bouchons soient moins conséquents, que les quotidiens
+	    soient plus agréables et moins polluants. </p> 
+
+	    <p>Nous demandons :
+		<ul>
+		    <li>Une fréquence d’au-moins 15 minutes entre tous
+		les passages de cars/bus/tramway/métro sur les lignes
+		existantes. </li> 
+		    <li> Des zones sécurisées aux alentours des gares
+		et des arrêts de transports en commun dans un rayon de
+		10 minutes à pied ou en vélo. Ces zones doivent inclure
+		aussi des stationnements pour les vélos (y compris les
+		vélos cargo). </li> 
+		    <li> Des aménagements de voies cyclables répondant
+		aux normes du Vélopolitain :
+		sécurité/praticité/visibilité pour toutes les
+		pratiques. </li> 
+		    <li> La réouverture de lignes ferroviaires
+		régionales pour encourager les déplacements
+		doux. </li> 
+		</ul>
+	    </p>
+	    
+	    <p>Étant donné l’urgence climatique et la pénibilité de
+	    circulation dans certaines communes et périphéries, nous
+	    demandons des démarrages d'action dès la première année de
+	    mandat.</p> 
+
+	</div>
+	<div class="col-lg-2 col-md-3 col-sm-4">
+
+	    <form method="post">{% csrf_token %}
+		<p>{{ form.non_field_errors }}</p>
+		{% for field in form %}
+		<p>
+		    {{ field.label }}<br>
+		    {{ field }}
+		    {% if field.help_text %}
+		    <small style="color: grey">{{ field.help_text }}</small>
+		    {% endif %}
+		</p>
+		{% for error in field.error_messages %}
+		<p style="color: red">{{ error }}</p>
+		{% endfor %}
+		{% endfor %}
+
+		<button type="submit" class="btn btn-outline-primary">Je signe</button>
+	    </form>
+	</div>
+    </div>
+
+    <div class="row pt-4">
+	{% show_projects %}
+    </div>
+</div>
+
+{% show_donate %}
+{% show_volunteer %}
+
+{% endblock %}

@@ -1,23 +1,15 @@
 {% extends base_template|default:'asso_tn/base_transport_nantes.html' %}
 {% load static %}
 {% load don %}
-
+{% load newsletter %}
 {% block content %}
-
-<div class="hero-image">
-  <div class="hero-text">
-    <h1>Nous contacter</h1>
-    <p class="hero-description">Un instant...</p>
-    <p align="center">
-	{% bouton_don_lg "J'adhère" %}
-    </p>
-  </div>
-</div>
 
 <div class="container pt-5">
     <div class="row">
 	<div class="col-lg-12">
 	    <h1>Nous contacter</h1>
+
+	    {% show_one_mailing_list 'my-petition' %}
 
 	    <p>Bientôt il y aura un formulaire de contacte sur cette
 		page.  En attendant, les méls marchent très bien.
