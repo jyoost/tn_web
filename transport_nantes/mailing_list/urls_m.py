@@ -11,7 +11,7 @@ urlpatterns = [
     path('petition-captcha', QuickMailingListSignupM.as_view(), name='quick_petition_signup'),
     path('petition/<slug:petition>/', AssoView.as_view(
         template_name='mailing_list/petitions/pays-de-la-loire-2021.html'),
-         {'form': QuickPetitionSignupForm()},
+         {'form': QuickPetitionSignupForm(initial={'petition': petition})},
          name='petition')
 ]
 

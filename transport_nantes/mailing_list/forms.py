@@ -67,6 +67,8 @@ class QuickPetitionSignupForm(ModelForm):
         label="Je suis humain",
         help_text="* disponibilité réservée aux humains",
         error_messages=dict(invalid="captcha incorrect, veuillez réessayer"))
+    petition = forms.CharField(
+        max_length=50, required=True)
 
     class Meta:
         model = User
