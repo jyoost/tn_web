@@ -21,14 +21,20 @@ SECRET_KEY = settings_local.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = settings_local.DEBUG
-ROLE = settings_local.ROLE
+role_from_env = os.getenv('ROLE')
+if role_from_env is not None:
+    ROLE = role_from_env
+else:
+    ROLE = settings_local.ROLE
 
 ALLOWED_HOSTS = settings_local.ALLOWED_HOSTS
 # This will override DynamicSiteDomainMiddleware.
 # It is meant for developers in dev, not for use on
 # deployed instances.
-DEFAULT_SITE_ID = os.getenv('DEFAULT_SITE_ID', settings_local.DEFAULT_SITE_ID)
-
+settings_local_default_site_id = -1 # Invalid value.
+if ROLE not in ['staging', 'production'] and hasattr(settings_local, 'DEFAULT_SITE_ID'):
+    settings_local_default_site_id = settings_local.DEFAULT_SITE_ID
+DEFAULT_SITE_ID = os.getenv('DEFAULT_SITE_ID', settings_local_default_site_id)
 # Application definition
 
 INSTALLED_APPS = [

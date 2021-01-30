@@ -30,6 +30,8 @@ AWS_SECRET_ACCESS_KEY = ''
 AWS_DEFAULT_REGION = ''
 DEFAULT_FROM_EMAIL = ''
 
-# For dev, set a site domain to "localhost:8000" and name to "localhost" in Sites model
-# then open website in browser with url => localhost:8000
+# For dev, set a site domain to "localhost:8000" and name to
+# "localhost" in the Sites model then open website in browser with url
+# => localhost:8000.  The default site id can alternatively be set in
+# the environment, which will override the value set here.
 DEFAULT_SITE_ID = 1
