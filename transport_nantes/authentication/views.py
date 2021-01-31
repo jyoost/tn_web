@@ -159,6 +159,7 @@ def activate(request, token, remember_me, base_template=None):
         user = User.objects.get(pk=user_id)
         user.is_active = True
         user.profile.email_confirmed = True
+        user.profile.once_token = False
         user.save()
         auth.login(request, user)
         # Set session cookie expiration to session duration if "False" otherwise for 30 days

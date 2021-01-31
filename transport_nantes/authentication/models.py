@@ -24,6 +24,11 @@ class Profile(models.Model):
     commune = models.CharField(max_length=100, blank=True)
     code_postal = models.CharField(max_length=10, blank=True)
 
+    # We need a boolean set to False by default. We turn it to True
+    # before activation mail is sent to keep a track. Then it is turn turned
+    # back to False when token is used. Like that token should be used only once
+    once_token = models.BooleanField(default=False)
+
     def __str__(self):
         if self.email_confirmed:
             confirmed = "email confirmed"

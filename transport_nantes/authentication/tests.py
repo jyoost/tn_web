@@ -491,18 +491,20 @@ class TokenMailTest(TestCase):
         self.assertIn("Le lien de confirmation est invalide. Peut-être qu'il a déjà été utilisé ou qu'il a expiré.",
             invalid_response.content.decode("utf-8"))
 
-    # # Test already used token and redirection to account_activation_invalid.html
-    # def test_mail_with_used_token(self):
-    #     # create user and get pk
-    #     User.objects.create_user(username="test_user", email="test_user@truc.com")
-    #     user = User.objects.get(username="test_user")
+    # Test already used token and redirection to account_activation_invalid.html
+    def test_mail_with_used_token(self):
+        # create user and get pk
+        User.objects.create_user(username="test_user", email="test_user@truc.com")
+        user = User.objects.get(username="test_user")
         
-    #     # Create token with user.pk
-    #     token = make_timed_token(user.pk, 20)
-    #     # Test redirection to invalid page
-    #     response1 = self.client.get("/auth/activate/True/" + token)
-    #     response2 = self.client.get("/auth/activate/True/" + token)
-    #     self.assertNotEqual(response2.url, "/")
+        # Create token with user.pk
+        token = make_timed_token(user.pk, 20)
+        # Test redirection to invalid page
+        response1 = self.client.get("/auth/activate/True/" + token)
+        response2 = self.client.get("/auth/activate/True/" + token, follow=True)
+
+        self.assertIn("Le lien de confirmation est invalide. Peut-être qu'il a déjà été utilisé ou qu'il a expiré.",
+            response2.content.decode("utf-8"))
     
     # Test out of time token and redirection to account_activation_invalid.html
     def test_mail_with_timed_out_token(self):

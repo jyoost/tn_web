@@ -2,6 +2,7 @@ from django.test import TestCase
 import datetime
 
 from .utils import make_timed_token, token_valid
+from django.contrib.auth.models import User
 
 # Create your tests here.
 
@@ -14,7 +15,11 @@ class TimedTokenTest(TestCase):
         not after.
 
         """
-        USER_ID = 3
+
+        User.objects.create_user(username="test_user", email="test_user@truc.com")
+        user = User.objects.get(username="test_user")
+
+        USER_ID = user.pk
         EXPIRY_MINUTES = 2
         EXPIRY_SECONDS = EXPIRY_MINUTES * 60
         NOW = datetime.datetime.now().timestamp()
