@@ -59,11 +59,13 @@ functions in order to permit HTML on the output.
 
 """
 
-def render_inclusion_tag_to_html(tag_source, tag_name):
+def render_inclusion_tag_to_html(tag_source, tag_name, *args):
     """Render an inclusion tag to a string.
     """
-
-    template_string = f"{{% load {tag_source} %}}{{% {tag_name} %}}"
+    quoted_args = ''
+    if (len(args)):
+        quoted_args = '"' + '" "'.join(args) + '"'
+    template_string = f"{{% load {tag_source} %}}{{% {tag_name} {quoted_args} %}}"
     template_context = {'csrf_token': settings.csrf_token}
     html = Template(template_string).render(Context(template_context))
     return html
@@ -196,7 +198,9 @@ class TNLinkParser(object):
         elif 'news' == self.bracket_class_string:
             newsletter_name = self.bracket_label_string
             description_text = self.paren_string
-            self.out_string += render_inclusion_tag_to_html('newsletter', 'show_mailing_list')
+            self.out_string += render_inclusion_tag_to_html(
+                'newsletter', 'show_mailing_list_signup',
+                newsletter_name, description_text)
             # Bug: this doesn't take into account the mailing list
             # requested or the label we request.
         elif 'action' == self.bracket_class_string:

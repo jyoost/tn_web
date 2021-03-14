@@ -50,7 +50,8 @@ class TnLinkParserTest(TestCase):
     def test_news(self):
         settings.csrf_token = 'some text that must exist'
         self.assertEqual(self.parser.transform('[[news:kangaroo]]((aardvark))'), \
-                         render_inclusion_tag_to_html('newsletter', 'show_mailing_list'))
+                         render_inclusion_tag_to_html('newsletter', 'show_mailing_list_signup',
+                                                      'kangaroo', 'aardvark'))
 
     def test_external_url(self):
         url = 'my-url'

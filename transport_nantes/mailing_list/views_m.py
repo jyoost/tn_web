@@ -10,7 +10,7 @@ from .events import user_subscribe_count, subscriber_count
 from .models import MailingList, MailingListEvent, Petition
 
 from .views import MailingListSignup, QuickMailingListSignup, MailingListMerci
-from .forms import QuickPetitionSignupForm
+from .forms import FastMailingListSignupForm, QuickPetitionSignupForm
 from asso_tn.views import AssoView
 
 from django.views.generic.edit import FormView
@@ -26,21 +26,11 @@ class QuickMailingListSignupM(QuickMailingListSignup):
 class MailingListMerciM(MailingListMerci):
     template_name = 'mailing_list/merci_m.html'
 
-class QuickPetitionSignup(FormView):
-    template_name = 'mailing_list/quick_signup_m.html'
-    merci_template = 'mailing_list/merci_petition.html' # This needs to be parameterised by petition.
-    form_class = QuickPetitionSignupForm
-
-    # We don't currently populate this form with the user's current
-    # subscriptions.  If the user is logged in, we should.  This then
-    # becomes the edit form as well.
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['hero'] = True
-        context['hero_image'] = 'asso_tn/images-libres/black-and-white-bridge-children-194009-1000.jpg'
-        context['hero_title'] = 'Newsletter'
-        return context
+class QuickSignupView(FormView):
+    # Base class for mailing list and petition signups.
+    template_name = ''
+    merci_template = '' # This needs to be parameterised by petition/list.
+    form_class = None
 
     def form_valid(self, form):
         """Process a valid QuickPetitionSignup.
@@ -61,13 +51,14 @@ class QuickPetitionSignup(FormView):
         # user.profile.code_postal = form.cleaned_data['code_postal']
         # user.profile.save()
         
-        petition = MailingList.objects.filter(
-            mailing_list_token=form.cleaned_data['petition_name'])
-        if len(petition) == 0:
-            return HttpResponseNotFound("Pétition inconnu")
+        mailing_list = MailingList.objects.filter(
+            mailing_list_token=form.cleaned_data['list_name'])
+        if len(mailing_list) == 0:
+            print(form.cleaned_data['list_name'])
+            return HttpResponseNotFound("Liste inconnu")
         subscription = MailingListEvent.objects.create(
             user=user,
-            mailing_list=petition[0],
+            mailing_list=mailing_list[0],
             event_type=MailingListEvent.EventType.SUBSCRIBE)
         subscription.save()
         return render(
@@ -79,6 +70,34 @@ class QuickPetitionSignup(FormView):
                 'hero_title': 'Newsletter',
             }
         )
+
+class FastMailingListSignup(QuickSignupView):
+    template_name = 'mailing_list/quick_signup_m.html'
+    merci_template = 'mailing_list/merci_m.html' # This needs to be parameterised by petition.
+    form_class = FastMailingListSignupForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hero'] = True
+        context['hero_image'] = 'asso_tn/images-libres/black-and-white-bridge-children-194009-1000.jpg'
+        context['hero_title'] = 'Newsletter'
+        return context
+
+class QuickPetitionSignup(QuickSignupView):
+    template_name = 'mailing_list/quick_signup_m.html'
+    merci_template = 'mailing_list/merci_petition.html' # This needs to be parameterised by petition.
+    form_class = QuickPetitionSignupForm
+
+    # We don't currently populate this form with the user's current
+    # subscriptions.  If the user is logged in, we should.  This then
+    # becomes the edit form as well.
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hero'] = True
+        context['hero_image'] = 'asso_tn/images-libres/black-and-white-bridge-children-194009-1000.jpg'
+        context['hero_title'] = 'Newsletter'
+        return context
 
 class PetitionView(AssoView):
 

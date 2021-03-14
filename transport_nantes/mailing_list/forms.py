@@ -62,12 +62,26 @@ class QuickMailingListSignupForm(ModelForm):
             'email': "Adresse mél",
         }
 
+class FastMailingListSignupForm(ModelForm):
+    list_name = forms.CharField(
+        max_length=80,
+        required=False,#True
+        widget=forms.HiddenInput())
+
+    class Meta:
+        model = User
+        fields = ('email',)
+
+        labels = {
+            'email': "Adresse mél",
+        }
+
 class QuickPetitionSignupForm(ModelForm):
     captcha = CaptchaField(
         label="Je suis humain",
         help_text="* disponibilité réservée aux humains",
         error_messages=dict(invalid="captcha incorrect, veuillez réessayer"))
-    petition_name = forms.CharField(
+    list_name = forms.CharField(
         max_length=80,
         required=False,#True
         widget=forms.HiddenInput())

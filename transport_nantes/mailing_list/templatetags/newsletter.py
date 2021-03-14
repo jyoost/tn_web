@@ -4,6 +4,7 @@ from django.utils.safestring import mark_safe
 
 from mailing_list.forms import QuickMailingListSignupForm
 from mailing_list.forms import QuickPetitionSignupForm
+from mailing_list.forms import FastMailingListSignupForm
 
 register = template.Library()
 
@@ -14,6 +15,22 @@ def show_mailing_list(context):
     """
     form = QuickMailingListSignupForm
     context['form'] = form
+    return context
+
+@register.inclusion_tag('mailing_list/panel/fast_mailing_list.html', takes_context=True)
+def show_mailing_list_signup(context,
+                             listname,
+                             button_text="Je m'inscris"):
+    """Offer to join the mailing list listname.
+
+    The presentation is a custom message and a request for email address.
+    On button press, the user is presented with a captcha,
+    then a thank you message.
+
+    """
+    form = FastMailingListSignupForm
+    context['form'] = form
+    context['button_text'] = button_text
     return context
 
 @register.inclusion_tag('mailing_list/panel/petition.html')
@@ -27,7 +44,7 @@ def show_petition_signup(petition_name):
 
     """
     form = QuickPetitionSignupForm(
-        initial={'petition_name': petition_name})
+        initial={'list_name': petition_name})
     return {'form': form}
 
 @register.simple_tag
