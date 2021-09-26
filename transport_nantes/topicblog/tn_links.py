@@ -123,6 +123,8 @@ class TNLinkParser(object):
 
     def log(self, message):
         if self.verbose:
+            # We permit using print because, presumably, we'd not do
+            # this except in dev.
             print(message)
 
     def set_state(self, state):

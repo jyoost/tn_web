@@ -50,7 +50,6 @@ class ResponseView(TemplateView):
         context['survey'] = survey
         context['questions'] = SurveyQuestion.objects.filter(
             survey=survey).order_by('sort_index')
-        print(context)
         return context
 
 #### Views for viewing results ########################################

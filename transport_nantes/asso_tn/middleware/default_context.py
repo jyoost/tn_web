@@ -36,7 +36,6 @@ class DefaultContextMiddleware:
         # This runs after the view.
         my_context = copy(self.social_media_context)
         if 'social' in response.context_data:
-            print('--')
             for key, value in response.context_data["social"].items():
                 if value:
                     my_context[key] = value

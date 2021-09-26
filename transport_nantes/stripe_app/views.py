@@ -115,7 +115,6 @@ def create_checkout_session(request: dict) -> dict:
     ?session_id={CHECKOUT_SESSION_ID} means the redirect
     will have the session ID set as a query param
     """
-    print(request.POST)
     if request.method == "POST":
         # We're forced to give a full URL, even if the request is local
         # Stripe uses HTTPS on live but tolerate http for test purpose.

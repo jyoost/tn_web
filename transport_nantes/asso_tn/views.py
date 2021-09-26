@@ -26,8 +26,6 @@ class AssoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(context['view'].request.GET.get('dog'))
-        print(context['view'].request.GET.keys())
         context['title'] = self.title
         context['meta_descr'] = self.meta_descr
         context['twitter_title'] = self.twitter_title

@@ -1,4 +1,4 @@
-from asso_tn.utils import make_timed_token, token_valid
+import logging
 
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -15,7 +15,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import LoginView, LogoutView
 from django.conf import settings
 
+from asso_tn.utils import make_timed_token, token_valid
 from authentication.forms import SignUpForm, UserUpdateForm, ProfileUpdateForm
+
+logger = logging.getLogger(__name__)
 
 """
 A quick note on the captcha:
@@ -48,8 +51,8 @@ def login(request):
                     send_activation(request, user)
                     return redirect('authentication:account_activation_sent', is_new=False)
             except ObjectDoesNotExist:
-                print('ObjectDoesNotExist')
-                pass            # I'm not sure this can ever happen.
+                logger.debug("Object does not exist.")
+                pass            # Can this happen?
 
             # There should be precisely one or zero existing user with the
             # given email, but since the django user model doesn't impose
@@ -93,7 +96,8 @@ def send_activation(request, user):
     if hasattr(settings, 'ROLE') and settings.ROLE in ['staging', 'production']:
         user.email_user(subject, message)
     else:
-        # We're in dev.
+        # We're in dev.  Leave these prints, they only execute in dev
+        # mode, which is precisely where we want to see their output.
         print("Mode dev : mél qui aurait été envoyé :")
         print(message)
 

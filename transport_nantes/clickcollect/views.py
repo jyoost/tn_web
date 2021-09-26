@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.models import User
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
@@ -8,7 +10,7 @@ from django.utils.crypto import get_random_string
 from .forms import ClickCollectForm
 from .models import ClickableCollectable, ClickAndCollect
 
-# Create your views here.
+logger = logging.getLogger(__name__)
 
 class GiletReserveView(FormView):
     template_name = 'clickcollect/reserve.html'
@@ -30,8 +32,8 @@ class GiletReserveView(FormView):
         try:
             user.refresh_from_db()
         except ObjectDoesNotExist:
-            print('ObjectDoesNotExist')
-            pass            # I'm not sure this can ever happen.
+            logger.debug("Object does not exist.")
+            pass
         if user is None or user.pk is None:
             user = User.objects.filter(email=form.cleaned_data['email']).first()
             if user is None:
