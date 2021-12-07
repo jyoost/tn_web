@@ -88,7 +88,8 @@ def full_width_fixed_amount_donation_button(message=None, amount=1, cta_message=
 
 
 @register.simple_tag
-def fixed_amount_donation_button(amount=1, cta_message="Soutenir"):
+def fixed_amount_donation_button(
+        amount=1, cta_message="Soutenir", click_context=None):
     """Create a donation button with proposed fixed donation amount.
 
     Present a donation page with a fixed amount and optional
@@ -98,10 +99,14 @@ def fixed_amount_donation_button(amount=1, cta_message="Soutenir"):
 
     The amount is the fixed amount to display.
     The cta_message is the button text.
+    click_context if provided will help tracking the origin of the click.
 
     """
-    html_template = """<a href="{url}" class="btn donation-button">""" + \
-        f"""{cta_message}</a>"""
+    html_template = \
+        """<a href="{url}""" + f"""?click_context={click_context}" """ + \
+        """class="btn donation-button" """ + \
+        f""">{cta_message}</a>"""
+
     return mark_safe(html_template.format(
         url=reverse("stripe_app:quick_donation", args=[amount])
         )

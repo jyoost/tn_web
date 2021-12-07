@@ -218,6 +218,7 @@ def tracking_progression(request: dict) -> TrackingProgression:
     Also saves the user agent information for eventual analysis.
     """
     try:
+        print("\n\nPOST TRACKING HERE :\n\n")
         data = request.POST
         data = data.dict()
         for key, _ in data.items():
@@ -232,6 +233,7 @@ def tracking_progression(request: dict) -> TrackingProgression:
             "amount_form_done": data["step_1_completed"],
             "donation_form_done": data["step_2_completed"],
             "tn_session": request.session.get("tn_session"),
+            "context_of_click": data["context_of_click"],
             "browser": user_agent.browser.family,
             "browser_version": user_agent.browser.version_string,
             "os": user_agent.os.family,
@@ -247,15 +249,19 @@ def tracking_progression(request: dict) -> TrackingProgression:
         }
 
         try:
+            print("\nKwargs de tracking :", kwargs)
             data = TrackingProgression(**kwargs)
             data.save()
+            print("\nobject créé : ", data)
         except Exception as error_message:
+            print(error_message)
             logger.debug(
                 "Error while creating TrackingProgression instance : ",
                 error_message)
 
         return HttpResponse(status=200)
     except Exception as error_message:
+        print("Error on creation of tracking :", error_message)
         logger.debug("error message: ", error_message)
         return JsonResponse({'error': str(error_message)})
 
@@ -508,4 +514,9 @@ class QuickDonationView(TemplateView):
             )
         context["info_form"] = DonationForm()
         context["originating_view"] = "QuickDonationView"
+        # Click context is set in the template tag dedicated to this view.
+        if "click_context" in self.request.GET:
+            context["click_context"] = self.request.GET["click_context"]
+        else:
+            context["click_context"] = ""
         return context

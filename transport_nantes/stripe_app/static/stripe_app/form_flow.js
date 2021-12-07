@@ -263,8 +263,11 @@ window.addEventListener("beforeunload", function(event) {
     var form_progression = new FormData();
     form_progression.append("step_1_completed", step_1_completed)
     form_progression.append("step_2_completed", step_2_completed)
-    form_progression.append("user_agent", navigator.userAgent)
-   
+    form_progression.append("user_agent", navigator.userAgent);
+    // Tells us about where the user comes from
+    context_of_click =  document.getElementsByName("click-context")[0].getAttribute("data-click-context")
+    form_progression.append("context_of_click", context_of_click)
+
     fetch("/donation/tracking/", {
         headers: myHeaders,
         body: form_progression, 

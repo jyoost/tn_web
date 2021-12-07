@@ -19,6 +19,9 @@ class TrackingProgression(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Date")
     tn_session = models.CharField(max_length=50, verbose_name="Session",
                                   null=True)
+    context_of_click = models.CharField(max_length=200,
+                                        verbose_name="Contexte du clic",
+                                        null=True)
     browser = models.CharField(
         max_length=50, verbose_name="Navigateur", null=True)
     browser_version = models.CharField(
