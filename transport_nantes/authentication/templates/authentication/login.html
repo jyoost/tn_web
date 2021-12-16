@@ -18,10 +18,6 @@
 					href="#password-connexion-form">Mot de passe</a>
 				</li>
 
-				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab"
-					href="#first-login-form">Première connexion par mot de passe</a>
-				</li>
 			</ul> <!-- nav-tabs -->
 
 			<div class="tab-content">
@@ -67,29 +63,32 @@
 						email.
 					</p>
 
-				</div>  <!-- password-connexion-form -->
-				<div id="first-login-form" class="container tab-pane fade">
-					<p>
-						{{ form.password2|as_crispy_field  }}
-					</p>
-					{% if pwd_error %}
-						<p style="color: red">{{ pwd_error }}</p>
-					{% endif%}
-
-					{% for error in form.password2.errors %}
-						<p style="color: red">
-							{% if error == "The two password fields didn’t match." %}
-								Les mots de passe ne sont pas identiques.
-							{% else %}
-								{{ error }}
-							{% endif %}
+					<details id="first-login-form">
+						<summary style="color:var(--mobilitains-bleu);">Première connexion par mot de passe ? Cliquez ici !</summary>
+						<p>
+							{{ form.password2|as_crispy_field  }}
 						</p>
-					{% endfor %}
+						{% if pwd_error %}
+							<p style="color: red">{{ pwd_error }}</p>
+						{% endif%}
+	
+						{% for error in form.password2.errors %}
+							<p style="color: red">
+								{% if error == "The two password fields didn’t match." %}
+									Les mots de passe ne sont pas identiques.
+								{% else %}
+									{{ error }}
+								{% endif %}
+							</p>
+						{% endfor %}
+	
+						<p class="text-secondary">Si vous créez votre compte et vous fournissez un
+							mot de passe, tapez-le une deuxième fois.</p>
+						<button type="submit" class="btn btn-outline-secondary">Inscription</button>
+						</details>  <!-- first-login-form" -->
 
-					<p class="text-secondary">Si vous créez votre compte et vous fournissez un
-						mot de passe, tapez-le une deuxième fois.</p>
-					<button type="submit" class="btn btn-outline-secondary">Inscription</button>
-				</div>  <!-- first-login-form" -->
+				</div>  <!-- password-connexion-form -->
+				
 			</div> <!-- tab-content -->
 		</form>
 	</div>
