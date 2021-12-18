@@ -1,0 +1,10 @@
+<p>robots : {{ robots }}<br>
+humains : {{ humans }}<br>
+distincts humains : {{ humans_unique }}</p>
+<p>Sources :
+    <ul>
+	{% for name, count in sources.items %}
+	<li>{{ name|default:"<aucun>" }} : {{ count }}</li>
+	{% endfor %}
+    </ul>
+</p>
